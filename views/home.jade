@@ -1,23 +1,90 @@
-extends layout
+doctype 5
+html(ng-app xmlns="http://www.w3.org/1999/html")
+  head
+    meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
+    script(src='/js/lib/angular.min.js')
+    script(src='/controllers.js')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    title = title
+  body
+    .container
+      .header Logo & Menu
+        span HKPow
+      div(class="app" ng-controller="RepayCalcCtrl")
+        .app-title 等额本息还款明细计算
+          span App Online Edition-Beta
+        div(ng-class="result-output")
+          span
+            h4.div-title 还款明细
+              span.search-span Search
+                input(class="search-input" ng-model="query" placeholder="输入还款序号/金额 实时查询" value="")
+          table
+            tr
+              th 还款序号
+              th 月还本金
+              th 月还利息
+              th 本息合计
+              th 本金余额
+          div(ng-class="table-body")
+            table
+              tr(ng-repeat="seq in repayment_seq | filter:query" ng-class="{oddrow: $index % 2 != 0, selected: $index==selectedRow}" 
+            	  ng-click="selectItem($index)")
+                td
+                  {{seq.serial_num}}
+                td
+                  {{seq.m_principal}}
+                td
+                  {{seq.m_interest}}
+                td
+                  {{seq.m_PrinInter}}
+                td
+                  {{seq.principal_balance}}
+        div(ng-class="pilot-zone")
+          div(ng-class="bulletin" ng-model="warning")
+            h4.div-title 提示
+            div(class="custom-error" ng-show="userInputForm.date.$dirty && userInputForm.date.$invalid")
+              span(ng-show="userInputForm.date.$error.required") 输入合同日期 
+              br
+              span(ng-show="userInputForm.date.$error.pattern") 输入格式错误，正确格式如200608
+            div(class="custom-error")
+              span {{warning}}
+            div(class="custom-error" ng-show="userInputForm.amount.$dirty && userInputForm.amount.$invalid")
+              span(ng-show="userInputForm.amount.$error.required") 输入贷款额度 
+              br
+              span(ng-show="userInputForm.amount.$error.pattern") 输入格式错误, 正确格式如100000
+            div(class="custom-error" ng-show="userInputForm.year.$dirty && userInputForm.year.$invalid")
+              span(ng-show="userInputForm.year.$error.required") 输入贷款年限 
+              br
+              span(ng-show="userInputForm.year.$error.pattern") 输入格式错误, 正确格式如10
+          div(ng-class="extra-data")
+            h4.div-title 数据
+            .sum-data 已付本金合计 : 
+              span {{principal_paid}}
+            .sum-data 已付利息合计 : 
+              span {{interest_paid}}
+            .sum-data 已付本息合计 : 
+              span{{sum_prin_intr}}
+          div(ng-class="input-zone")
+            h4.div-title 合同信息
+            form(name="userInputForm" method="post")
+              | 合同编号
+              input(class="input" type="text" ng-model="contract.id" name="id" placeholder="可缺省")
+              br 
+              | 合同日期
+              input(class="input" type="text" ng-model="contract.date" name="date" required ng-pattern="/^20[0-9]{2}(0[1-9]|1[0-2])$/" ng-minlength=6 ng-maxlength=6 placeholder="如200608")
+              br  
+              | 贷款金额
+              input(class="input" type="text" required ng-model="contract.amount" name="amount" required ng-pattern="/^[1-9][0-9]*$/" placeholder="如100000")
+              br 
+              | 贷款年限
+              input(class="input" type="text" required ng-model="contract.year" name="year" required ng-pattern="/^[1-9][0-9]*$/" placeholder="如10")
+              br
+              input(class="btn-primary" ng-click='submit_contract(contract)' type="submit" value="Compute" ng-disabled="(userInputForm.date.$pristine || userInputForm.date.$dirty && userInputForm.date.$invalid) || (user.InputForm.amount.$pristine || userInputForm.amount.$dirty && userInputForm.amount.$invalid)||(user.InputForm.year.$pristine || userInputForm.year.$dirty && userInputForm.year.$invalid)")
+      .footer
+        p moviezhou@HKPow &nbsp| &nbsp Powered by Node.js Angular.js Express &nbsp | &nbsp ©2013
 
-block content
-  #wrapper
-    #logo
-        img(src='/images/logo.png')
-    #display
-        h1= title
-        #login
-            form(method='post')
-                #slogan
-                    p Enter your name if you want to be a mind-blower
-                #login-form
-                    .item
-                        label Username
-                        input(type='text', name='username')
-                    .item
-                        label Password
-                        input(type='password', name='password')
-                    .submit-btn
-                        label &nbsp;
-                        input(type='submit', value='Log In')
-    include footer
+
+
+
+
+

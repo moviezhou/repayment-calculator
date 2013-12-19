@@ -4,7 +4,7 @@
  */
 
 var express = require('express');
-var blog = require('./routes/blog');
+var webapp = require('./routes/home');
 var http = require('http');
 var path = require('path');
 
@@ -30,16 +30,10 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', blog.home);
-app.get('/page', blog.error404);
-app.post('/', blog.login_handler);
-app.get('/blogs', blog.blogs);
-app.get('/blog/:id', blog.blog)
-app.get('/page',blog.page);
-app.get('/logout', function(req,res){
-	delete req.session.username;
-	res.redirect('/');
-})
+app.get('/', webapp.home);
+app.get('/page', webapp.error404);
+app.post('/input_handler', webapp.input_handler);
+app.get('/test',webapp.test);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
