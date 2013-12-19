@@ -1,1 +1,12 @@
-Mind-blow is a prctice project created for learning of Nodejs and Express.
+repayment-calculator is a private project(can hardly be called a project) created for learning purpose.
+It's a web apps powered by Node.js Express.js and Angular.js,thanks for all of these masterpiece and people who created them.
+
+It's a equal installment payment calculator for housing fund loan.
+
+How to use?
+
+git clone https://github.com/moviezhou/repayment-calculator.git
+cd repayment-calculator
+node app
+locate your borrowser to localhost:3000/
+JUST MAKE SURE that you have node.js and express.js installed first.
